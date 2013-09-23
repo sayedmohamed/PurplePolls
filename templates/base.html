@@ -1,12 +1,14 @@
+{% load staticfiles %}
 <html>
     <head>
-        <title>{% block title %}Poll AJAX Tutorial - DJBP.CO.UK{% endblock %}</title>
+        <title>{% block title %}Poll django example{% endblock %}</title>
         <script type="text/javascript" src="/media/jquery.js"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" />
     </head>
     <body>
         <div class="container">
             <strong><div class="message"></div></strong>
-{% block content %}{% endblock %}
+            {% block content %}{% endblock %}
         </div>
     </body>
 </html>
