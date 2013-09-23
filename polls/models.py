@@ -17,6 +17,9 @@ class Poll(models.Model):
     was_published_recently.boolean = True
     was_published_recently.short_description = 'Published recently?'
 
+    def get_absolute_url(self):
+        return u"/polls/%s/" % self.pk
+
 
 class Choice(models.Model):
     poll = models.ForeignKey(Poll)
