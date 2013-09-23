@@ -38,7 +38,7 @@ def _mark_voted(request,poll_id):
 def vote(request, poll_id):
     p = get_object_or_404(Poll, pk=poll_id)
     if 'voted' in request.session and poll_id in request.session['voted']:
-        # Display results page
+        # Display an error messages
         return HttpResponseServerError("You've already voted on this poll.")
 
     try:
