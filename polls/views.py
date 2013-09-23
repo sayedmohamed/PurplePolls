@@ -30,6 +30,14 @@ class ResultsView(generic.DetailView):
 
 def vote(request, poll_id):
     p = get_object_or_404(Poll, pk=poll_id)
+
+    if 'voted' in request.session and poll_id in request.session['voted']:
+        # Display results page
+        return render(request, 'polls/results.html', {
+            'poll': p,
+            'error_message': "You can only vote once.",
+        })
+
     try:
         selected_choice = p.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
@@ -39,9 +47,11 @@ def vote(request, poll_id):
             'error_message': "You didn't select a choice.",
         })
     else:
+        if not 'voted' in request.session:
+            request.session['voted'] = []
+        # Make sure the user can't vote again on this poll
+        request.session['voted'].append(poll_id)
+
         selected_choice.votes += 1
         selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(p.id,)))
