@@ -1,8 +1,11 @@
-{% load staticfiles %}
 {% extends "base.html" %}
+{% load staticfiles %}
+
 {% block content %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" />
+
+<strong>Available polls</strong>
 
 {% if latest_poll_list %}
     <ul>
@@ -13,5 +16,47 @@
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
+
+<strong>Create a new poll</strong>
+<form action="{% url 'polls:new' %}" method="post">
+{% csrf_token %}
+    <div>Question: <input type="text" name="question" /></div>
+    <div>Choices: <textarea name="choices"></textarea></div>
+    <input type="submit" value="Create new poll" id="new" />
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(new).click(create_poll);
+    });
+
+    var create_poll = function() {
+        var question = $("form input[name='question']:text").val();
+        var choices = $("form input[name='choices']:text").val();
+
+        if ((question != "") && (choices != "")) {
+            var data = { question:question, choices:choices };
+            var args = { type:"POST", url:"/polls/new/", data:data, complete:new_poll_complete };
+            $.ajax(args);
+        }
+        return false;
+    };
+
+    var new_poll_complete = function(res, status) {
+        if (status == "success") {
+            window.location.href = "/polls/";
+        }
+        else {
+            display_message(res.responseText, $(".message"));
+        }
+    }
+
+    var display_message = function(msg, elem) {
+        elem.text(msg);
+    };
+
+    $.ajaxSetup( {
+            data: { csrfmiddlewaretoken: '{{csrf_token}}' },
+        });
 
 {% endblock %}
