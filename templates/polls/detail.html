@@ -3,6 +3,8 @@
 
 <h1>{{ poll.question }}</h1>
 
+
+
 <form action="{% url 'polls:vote' poll.id %}" method="post">
 {% csrf_token %}
 {% for choice in poll.choice_set.all %}
@@ -20,15 +22,10 @@
     var create_vote = function() {
         var value = $("form input[name='choice']:checked").val();
 
-        if (value != "")
-        {
+        if (value != "") {
             var data = { choice:value };
             var args = { type:"POST", url:"/polls/{{ poll.id }}/vote/", data:data, complete:create_vote_complete };
             $.ajax(args);
-        }
-        else
-        {
-            // We should display a helpful error message
         }
         return false;
     };
@@ -37,15 +34,13 @@
         if (status == "success") {
             window.location.href = "/polls/{{ poll.id }}/results/";
         }
-        else
-        {
+        else {
             display_message(res.responseText, $(".message"));
         }
     }
 
     var display_message = function(msg, elem) {
-        var msg_div = $('<div><strong><p>'+msg+'</p></strong></div>');
-        elem.append(msg_div).fadeIn('slow').animate({opacity: 1.0}, 7000);
+        elem.text(msg);
     };
 
     $.ajaxSetup( {
