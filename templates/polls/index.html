@@ -1,4 +1,6 @@
 {% load staticfiles %}
+{% extends "base.html" %}
+{% block content %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" />
 
@@ -11,3 +13,5 @@
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
+
+{% endblock %}
