@@ -1,24 +1,11 @@
 {% extends "base.html" %}
-{% load staticfiles %}
 
 {% block content %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" />
-
-<strong>Available polls</strong>
-
-{% if latest_poll_list %}
-    <ul>
-    {% for poll in latest_poll_list %}
-        <li><a href="{% url 'polls:detail' poll.id %}">{{ poll.question }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
+{% include "polls/poll_list.html" %}
 
 <strong>Create a new poll</strong>
-<form action="{% url 'polls:new' %}" method="post">
+<form action="{% url 'polls:index' %}" method="post">
 {% csrf_token %}
     <div>Question: <input type="text" name="question" /></div>
     <div>Choices: <textarea name="choices"></textarea></div>
@@ -30,32 +17,31 @@
         $(new).click(create_poll);
     });
 
-    var create_poll = function() {
+    // Async HTTP request to create a new poll on the server
+    create_poll = function (e) {
+        e.preventDefault()
         var question = $("form input[name='question']:text").val();
         var choices = $("form input[name='choices']:text").val();
 
         if ((question != "") && (choices != "")) {
-            var data = { question:question, choices:choices };
-            var args = { type:"POST", url:"/polls/", data:data, complete:new_poll_complete };
+            var data = { question: question, choices: choices };
+            var args = { type: "POST", url: "/polls/new", data: data, complete: new_poll_complete };
             $.ajax(args);
         }
         return false;
     };
 
+    // Callback from the Ajax query - display results / error msg
     var new_poll_complete = function(res, status) {
         if (status == "success") {
-            document.innerHTML = res.responseText
-            //window.location.href = "/polls/";
+            $(".poll_list").text(res.responseText)
         }
         else {
-            display_message(res.responseText, $(".message"));
+            $(".message").text(res.responseText)
         }
     }
 
-    var display_message = function(msg, elem) {
-        elem.text(msg);
-    };
-
+    // Used in order to keep django's CSRF protection
     $.ajaxSetup( {
             data: { csrfmiddlewaretoken: '{{csrf_token}}' }
         });
