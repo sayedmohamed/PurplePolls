@@ -27,19 +27,19 @@ class ResultsView(generic.DetailView):
     template_name = 'polls/results.html'
 
 
+# Make sure the user can't vote again on this poll
 def _mark_voted(request, poll_id):
     if not 'voted' in request.session:
         request.session['voted'] = []
-    # Make sure the user can't vote again on this poll
     voted_on = request.session['voted']
     voted_on.extend([poll_id])
     request.session['voted'] = voted_on
 
 
+# Save the user's vote on a poll
 def vote(request, poll_id):
     p = get_object_or_404(Poll, pk=poll_id)
     if 'voted' in request.session and poll_id in request.session['voted']:
-        # Display an error messages
         return HttpResponseServerError("You've already voted on this poll.")
 
     try:
@@ -69,8 +69,9 @@ def new(request):
         p = Poll(question=question, pub_date=timezone.now())
         p.save()
         for choice in choices:
-            c = Choice(poll=p, choice_text=choice, votes=0)
-            c.save()
+            Choice(poll=p, choice_text=choice, votes=0).save()
 
-        return render(request, 'polls/index.html')
-    pass
+    return render(request, 'polls/poll_list.html', {
+        'latest_poll_list': IndexView().get_queryset()
+    })
+

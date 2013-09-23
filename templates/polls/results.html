@@ -3,7 +3,6 @@
 
 <h1>{{ poll.question }}</h1>
 
-
 {% include "polls/results_inner.html" %}
 
 <a href="{% url 'polls:detail' poll.id %}">Vote again?</a>

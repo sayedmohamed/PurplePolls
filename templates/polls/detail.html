@@ -19,7 +19,8 @@
         $(vote).click(create_vote);
     });
 
-    var create_vote = function() {
+    var create_vote = function(e) {
+        e.preventDefault()
         var value = $("form input[name='choice']:checked").val();
 
         if (value != "") {
@@ -27,7 +28,6 @@
             var args = { type:"POST", url:"/polls/{{ poll.id }}/vote/", data:data, complete:create_vote_complete };
             $.ajax(args);
         }
-        return false;
     };
 
     var create_vote_complete = function(res, status) {
