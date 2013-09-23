@@ -31,7 +31,9 @@ def _mark_voted(request, poll_id):
     if not 'voted' in request.session:
         request.session['voted'] = []
     # Make sure the user can't vote again on this poll
-    request.session['voted'].append(poll_id)
+    voted_on = request.session['voted']
+    voted_on.extend([poll_id])
+    request.session['voted'] = voted_on
 
 
 def vote(request, poll_id):
