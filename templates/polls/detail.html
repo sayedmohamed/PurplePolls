@@ -3,6 +3,7 @@
 
 <h1>{{ poll.question }}</h1>
 
+<div class="results"></div>
 
 <form action="{% url 'polls:vote' poll.id %}" method="post">
 {% csrf_token %}
@@ -31,7 +32,7 @@
 
     var create_vote_complete = function(res, status) {
         if (status == "success") {
-            window.location.href = "/polls/{{ poll.id }}/results/";
+            $(".results").html(res.responseText);
         }
         else {
             display_message(res.responseText, $(".message"));

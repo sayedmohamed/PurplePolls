@@ -52,7 +52,7 @@ def vote(request, poll_id):
         selected_choice.save()
 
         if request.is_ajax():
-            return render(request, 'polls/results.html', {
+            return render(request, 'polls/results_inner.html', {
                 'poll': p,
             })
         else:

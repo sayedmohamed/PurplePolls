@@ -36,7 +36,7 @@
 
         if ((question != "") && (choices != "")) {
             var data = { question:question, choices:choices };
-            var args = { type:"POST", url:"/polls/new/", data:data, complete:new_poll_complete };
+            var args = { type:"POST", url:"/polls/", data:data, complete:new_poll_complete };
             $.ajax(args);
         }
         return false;
@@ -44,7 +44,8 @@
 
     var new_poll_complete = function(res, status) {
         if (status == "success") {
-            window.location.href = "/polls/";
+            document.innerHTML = res.responseText
+            //window.location.href = "/polls/";
         }
         else {
             display_message(res.responseText, $(".message"));
@@ -56,7 +57,7 @@
     };
 
     $.ajaxSetup( {
-            data: { csrfmiddlewaretoken: '{{csrf_token}}' },
+            data: { csrfmiddlewaretoken: '{{csrf_token}}' }
         });
 
 {% endblock %}
