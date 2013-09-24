@@ -45,7 +45,7 @@ def _get_polls_and_voted(request):
 # Detail view of a single poll
 def poll_detail(request, pk):
     poll = get_object_or_404(Poll, pk=pk)
-    if request.is_ajax():
+    if _has_user_voted(request, unicode(poll.id)):
         return render(request, 'polls/results.html', {'poll': poll})
     else:
         return render(request, 'polls/detail.html', {'poll': poll})
