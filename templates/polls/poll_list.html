@@ -1,21 +1,23 @@
-<div class="poll_list inner_container">
-    <strong>Available polls</strong>
+<div class="poll_list_outer">
+    <div class="poll_list inner_container">
+        <strong>Available polls</strong>
 
-    {% if latest_poll_list %}
-        <ul>
-        {% for poll in latest_poll_list %}
-            <li>
-                {% if poll.1 %}
-                    [Voted]
-                {% else %}
-                    [Vote!]
-                {% endif %}
-                &nbsp;
-                <a href="{% url 'polls:detail' poll.0.id %}">{{ poll.0.question }}</a>
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No polls are available.</p>
-    {% endif %}
+        {% if latest_poll_list %}
+            <ul>
+            {% for poll in latest_poll_list %}
+                <li>
+                    {% if poll.1 %}
+                        [Voted]
+                    {% else %}
+                        [Vote!]
+                    {% endif %}
+                    &nbsp;
+                    <a href="{% url 'polls:detail' poll.0.id %}">{{ poll.0.question }}</a>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No polls are available.</p>
+        {% endif %}
+    </div>
 </div>

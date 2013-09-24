@@ -1,21 +1,9 @@
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponseServerError
+from django.http import HttpResponseServerError
 from django.views import generic
 
 from polls.models import Poll, Choice
-
-
-def index(request):
-    polls = Poll.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:10]
-    polls_voted = []
-    for p in polls:
-        t = p, ('voted' in request.session and unicode(p.id) in request.session['voted'])
-        polls_voted.append(t)
-
-    return render(request, 'polls/index.html', {
-        'latest_poll_list': polls_voted,
-    })
 
 
 class DetailView(generic.DetailView):
@@ -26,6 +14,16 @@ class DetailView(generic.DetailView):
 class ResultsView(generic.DetailView):
     model = Poll
     template_name = 'polls/results.html'
+
+
+# Gets a list of the latest polls and voted boolean for this user
+def _get_polls_and_voted(request):
+    polls = Poll.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:10]
+    polls_voted = []
+    for p in polls:
+        t = p, ('voted' in request.session and unicode(p.id) in request.session['voted'])
+        polls_voted.append(t)
+    return polls_voted
 
 
 # Make sure the user can't vote again on this poll
@@ -40,6 +38,14 @@ def _mark_voted(request, poll_id):
 # Check if this user voted on the poll_id
 def _has_user_voted(request, poll_id):
     return 'voted' in request.session and poll_id in request.session['voted']
+
+
+# Front page (polls list)
+def index(request):
+    polls_voted = _get_polls_and_voted(request)
+    return render(request, 'polls/index.html', {
+        'latest_poll_list': polls_voted,
+    })
 
 
 # Save the user's vote on a poll
@@ -64,6 +70,7 @@ def vote(request, poll_id):
     })
 
 
+# Create a new poll
 def new(request):
     try:
         question = request.POST['question']
@@ -76,5 +83,7 @@ def new(request):
         for choice in choices:
             Choice(poll=p, choice_text=choice, votes=0).save()
 
-    return index(request)
-
+    polls_voted = _get_polls_and_voted(request)
+    return render(request, 'polls/poll_list.html', {
+        'latest_poll_list': polls_voted,
+    })
