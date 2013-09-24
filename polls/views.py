@@ -6,15 +6,16 @@ from django.views import generic
 from polls.models import Poll, Choice
 
 
-class IndexView(generic.ListView):
-    template_name = 'polls/index.html'
-    context_object_name = 'latest_poll_list'
+def index(request):
+    polls = Poll.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:10]
+    polls_voted = []
+    for p in polls:
+        t = p, ('voted' in request.session and unicode(p.id) in request.session['voted'])
+        polls_voted.append(t)
 
-    def get_queryset(self):
-        """Return the last ten published polls."""
-        return Poll.objects.filter(
-            pub_date__lte=timezone.now()
-        ).order_by('-pub_date')[:10]
+    return render(request, 'polls/index.html', {
+        'latest_poll_list': polls_voted,
+    })
 
 
 class DetailView(generic.DetailView):
@@ -71,7 +72,5 @@ def new(request):
         for choice in choices:
             Choice(poll=p, choice_text=choice, votes=0).save()
 
-    return render(request, 'polls/poll_list.html', {
-        'latest_poll_list': IndexView().get_queryset()
-    })
+    return index(request)
 
