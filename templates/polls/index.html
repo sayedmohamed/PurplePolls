@@ -4,13 +4,20 @@
 
 {% include "polls/poll_list.html" %}
 
-<strong>Create a new poll</strong>
-<form action="{% url 'polls:index' %}" method="post">
-{% csrf_token %}
-    <div>Question: <input type="text" name="question" /></div>
-    <div>Choices: <textarea name="choices"></textarea></div>
-    <input type="submit" value="Create new poll" id="new" />
-</form>
+{% load poll_extras %}
+
+<div class="inner_container">
+    <strong>Create a new poll</strong>
+    <form action="{% url 'polls:index' %}" method="post">
+    {% csrf_token %}
+        <div>Question:</div><input type="text" name="question" />
+        <div>Choices:</div>
+            {% for i in 3|get_range %}
+                <div><input type="text" name="choice{{ i }}"></div>
+            {% endfor %}
+        <br><input type="submit" value="Create new poll" id="new" />
+    </form>
+</div>
 
 <script type="text/javascript">
     $(document).ready(function() {
