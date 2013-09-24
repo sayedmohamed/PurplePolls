@@ -74,7 +74,7 @@ def vote(request, poll_id):
 def new(request):
     try:
         question = request.POST['question']
-        choices = request.POST['choices'].split('\n')
+        choices = request.POST['choices'].split(',')
     except KeyError:
         return HttpResponseServerError("Missing some values.")
     else:
