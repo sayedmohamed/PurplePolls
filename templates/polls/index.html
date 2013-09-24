@@ -20,17 +20,30 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        // Register the click action
         $('#new').click(create_poll);
+
+        // Disable form submission until something changes
+        $('input[type="text"]').keyup(function() {
+            if($(this).val() != '') {
+                $('input[type="submit"]').removeAttr('disabled');
+            }
+        });
     });
 
     // Async HTTP request to create a new poll on the server
     create_poll = function (e) {
         e.preventDefault()
-        var question = $("form input[name='question']:text").val();
-        var choices = $("form input[name='choice0']:text").val();
+        $('input[type="submit"]').attr('disabled','disabled');
 
-        if ((question != "") && (choices != "")) {
-            var data = { question: question, choices: choices };
+        var question = $("form input[name='question']:text").val();
+        var choices = [];
+        for (var i=0; i<3; i++) {
+            choices.push($("form input[name='choice" + i.toString() + "']:text").val());
+        }
+
+        if (question != "") {
+            var data = { question: question, choices: choices.toString() };
             var args = { type: "POST", url: "/polls/new", data: data, complete: new_poll_complete };
             $.ajax(args);
         }
@@ -38,9 +51,9 @@
 
     // Callback from the Ajax query - display results / error msg
     var new_poll_complete = function(res, status) {
-        console.log("TEST");
-        if (status == "success") {
+        if (status === "success") {
             $(".poll_list_outer").html(res.responseText)
+            $("#new").disabled=true;
         }
         else {
             $(".message").html(res.responseText)
