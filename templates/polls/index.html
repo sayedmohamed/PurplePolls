@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% include "polls/poll_list.html" %}
 
 <div class="inner_container">
     <div class="message"></div>
@@ -11,9 +10,12 @@
         <div>Question:</div><input type="text" name="question" />
         <div>Poll Choice:</div><input type="text" name="choice"><button id="add_choice">Add Choice</button>
         <ul id="choices_list"></ul>
-        <br><input type="submit" value="Create new poll" id="new" />
+        <input type="submit" value="Create new poll" id="new" />
     </form>
 </div>
+
+{% include "polls/poll_list.html" %}
+
 
 <script type="text/javascript">
     $(document).ready(function() {
