@@ -21,12 +21,14 @@
 
     var create_vote = function(e) {
         e.preventDefault()
-        var value = $("form input[name='choice']:checked").val();
-
-        if (value != "") {
+        if ($('input[name=choice]:checked').length > 0) {
+            var value = $("form input[name='choice']:checked").val();
             var data = { choice:value };
             var args = { type:"POST", url:"/polls/{{ poll.id }}/vote/", data:data, complete:create_vote_complete };
             $.ajax(args);
+        }
+        else {
+            display_message("You didn't select a choice.)", $(".message"));
         }
     };
 
