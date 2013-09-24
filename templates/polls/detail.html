@@ -1,18 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1>{{ poll.question }}</h1>
+    <h1>{{ poll.question }}</h1>
 
-<div class="results"></div>
+    <div class="results"></div>
 
-<form method="post">
-    {% csrf_token %}
-    {% for choice in poll.choice_set.all %}
-        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
-        <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
-    {% endfor %}
-    <input type="submit" value="Vote" id="vote" />
-</form>
+    <div class="poll_form">
+        <form method="post">
+            {% csrf_token %}
+            {% for choice in poll.choice_set.all %}
+                <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+                <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
+            {% endfor %}
+            <input type="submit" value="Vote" id="vote" />
+        </form>
+    </div>
 
 <script type="text/javascript">
     $(document).ready(function() {
