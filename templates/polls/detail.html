@@ -6,12 +6,12 @@
 <div class="results"></div>
 
 <form action="{% url 'polls:vote' poll.id %}" method="post">
-{% csrf_token %}
-{% for choice in poll.choice_set.all %}
-    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
-    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
-{% endfor %}
-<input type="submit" value="Vote" id="vote" />
+    {% csrf_token %}
+    {% for choice in poll.choice_set.all %}
+        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+        <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
+    {% endfor %}
+    <input type="submit" value="Vote" id="vote" />
 </form>
 
 <script type="text/javascript">
@@ -21,29 +21,17 @@
 
     var create_vote = function(e) {
         e.preventDefault()
-        if ($('input[name=choice]:checked').length > 0) {
-            var value = $("form input[name='choice']:checked").val();
-            var data = { choice:value };
-            var args = { type:"POST", url:"/polls/{{ poll.id }}/vote/", data:data, complete:create_vote_complete };
-            $.ajax(args);
-        }
-        else {
-            display_message("You didn't select a choice.)", $(".message"));
-        }
+        var value = $("form input[name='choice']:checked").val();
+        var data = { choice:value };
+        var args = { type:"POST", url:"/polls/{{ poll.id }}/vote/", data:data, complete:create_vote_complete };
+        $.ajax(args);
+        return false;
     };
 
     var create_vote_complete = function(res, status) {
         if (status == "success") {
             $(".results").html(res.responseText);
-        }
-        else {
-            display_message(res.responseText, $(".message"));
-        }
     }
-
-    var display_message = function(msg, elem) {
-        elem.text(msg);
-    };
 
     $.ajaxSetup( {
             data: { csrfmiddlewaretoken: '{{csrf_token}}' },

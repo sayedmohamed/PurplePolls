@@ -37,27 +37,31 @@ def _mark_voted(request, poll_id):
     request.session['voted'] = voted_on
 
 
+# Check if this user voted on the poll_id
+def _has_user_voted(request, poll_id):
+    return 'voted' in request.session and poll_id in request.session['voted']
+
+
 # Save the user's vote on a poll
 def vote(request, poll_id):
-    p = get_object_or_404(Poll, pk=poll_id)
-    if 'voted' in request.session and poll_id in request.session['voted']:
-        return HttpResponseServerError("You've already voted on this poll.")
-
     try:
+        p = get_object_or_404(Poll, pk=poll_id)
         selected_choice = p.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
-        return HttpResponseServerError("You didn't select a choice.")
+        message = "You didn't select a choice."
     else:
-        _mark_voted(request, poll_id)
-        selected_choice.votes += 1
-        selected_choice.save()
-
-        if request.is_ajax():
-            return render(request, 'polls/results_inner.html', {
-                'poll': p,
-            })
+        if 'voted' in request.session and poll_id in request.session['voted']:
+            message = "You've already voted on this poll"
         else:
-            return HttpResponseRedirect(p.get_absolute_url())
+            message = "Thank you for voting, every vote counts!"
+            _mark_voted(request, poll_id)
+            selected_choice.votes += 1
+            selected_choice.save()
+
+    return render(request, 'polls/results_inner.html', {
+        'poll': p,
+        'message': message,
+    })
 
 
 def new(request):
