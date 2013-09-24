@@ -2,7 +2,6 @@
 
 {% block content %}
 {% include "polls/poll_list.html" %}
-{% load poll_extras %}
 
 <div class="inner_container">
     <div class="message"></div>
@@ -12,7 +11,7 @@
         <div>Question:</div><input type="text" name="question" />
         <div>Poll Choice:</div><input type="text" name="choice"><button id="add_choice">Add Choice</button>
         <ul id="choices_list"></ul>
-        <br><br><input type="submit" value="Create new poll" id="new" />
+        <br><input type="submit" value="Create new poll" id="new" />
     </form>
 </div>
 
