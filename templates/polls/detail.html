@@ -5,7 +5,7 @@
 
 <div class="results"></div>
 
-<form action="{% url 'polls:vote' poll.id %}" method="post">
+<form method="post">
     {% csrf_token %}
     {% for choice in poll.choice_set.all %}
         <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
@@ -16,29 +16,26 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $(vote).click(create_vote);
+        $('#vote').click(create_vote);
     });
 
     var create_vote = function(e) {
         e.preventDefault()
         var value = $("form input[name='choice']:checked").val();
-        var data = { choice:value };
+        var data = { choice: value };
         var args = { type:"POST", url:"/polls/{{ poll.id }}/vote/", data:data, complete:create_vote_complete };
         $.ajax(args);
-        return false;
     };
 
     var create_vote_complete = function(res, status) {
         if (status == "success") {
             $(".results").html(res.responseText);
+        }
     }
 
     $.ajaxSetup( {
             data: { csrfmiddlewaretoken: '{{csrf_token}}' },
         });
-
-
 </script>
-
 
 {% endblock %}
