@@ -1,26 +1,27 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block content %}
+    
+    <div class="inner_container">
+        <div class="message"></div>
+        <strong>Create a new poll</strong>
+        <form method="post">
+        {% csrf_token %}
+            <div>Question:</div><input type="text" name="question" />
+            <div>Poll Choice:</div><input type="text" name="choice"><button id="add_choice">Add Choice</button>
+            <ul id="choices_list"></ul>
+            <input type="submit" value="Create new poll" id="new" />
+        </form>
+    </div>
 
-<div class="inner_container">
-    <div class="message"></div>
-    <strong>Create a new poll</strong>
-    <form method="post">
-    {% csrf_token %}
-        <div>Question:</div><input type="text" name="question" />
-        <div>Poll Choice:</div><input type="text" name="choice"><button id="add_choice">Add Choice</button>
-        <ul id="choices_list"></ul>
-        <input type="submit" value="Create new poll" id="new" />
-    </form>
-</div>
+    {% include "polls/poll_list.html" %}
 
-{% include "polls/poll_list.html" %}
-
-<script type="text/javascript">
-    $.ajaxSetup( {
-            data: { csrfmiddlewaretoken: '{{csrf_token}}' }
-        });
-</script>
-<script type="text/javascript" src="{% static 'polls/new.js' %}"></script>
+    <script type="text/javascript">
+        $.ajaxSetup( {
+                data: { csrfmiddlewaretoken: '{{csrf_token}}' }
+            });
+    </script>
+    <script type="text/javascript" src="{% static 'polls/new.js' %}"></script>
 
 {% endblock %}
