@@ -15,7 +15,12 @@ var create_vote = function(e) {
 };
 
 var create_vote_complete = function(res, status) {
-    if (status == "success") {
+    if (status === "success") {
+        $(".message").html('');
         $(".results").html(res.responseText);
+        $(".poll_form").html('');
+    }
+    else {
+        $(".message").html(res.responseText);
     }
 };

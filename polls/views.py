@@ -56,26 +56,22 @@ def poll_detail(request, pk):
 def vote(request, poll_id):
     try:
         p = get_object_or_404(Poll, pk=poll_id)
-        voted = False
         selected_choice = p.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
-        message = "You didn't select a choice."
-        # TODO: Don't show results!
+        return HttpResponseServerError("You didn't select a choice")
     else:
         if 'voted' in request.session and poll_id in request.session['voted']:
             message = "You've already voted on this poll"
-            voted = True
         else:
             message = "Thank you for voting, every vote counts!"
             _mark_voted(request, poll_id)
-            voted = True
             selected_choice.votes += 1
             selected_choice.save()
 
     return render(request, 'polls/poll_detail_results.html', {
         'poll': p,
         'message': message,
-        'voted': voted,
+        'voted': True,
     })
 
 
