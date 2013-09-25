@@ -12,7 +12,7 @@
                         [Todo]
                     {% endif %}
                     &nbsp;
-                    <a href="{% url 'polls:detail' poll.0.id %}">{{ poll.0.question }}</a>
+                    <a href="{% url 'polls:poll_detail' poll.0.id %}">{{ poll.0.question }}</a>
                 </li>
             {% endfor %}
             </ul>
