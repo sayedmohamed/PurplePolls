@@ -1,6 +1,8 @@
 {% extends "base.html" %}
-{% block content %}
 
+{% load staticfiles %}
+
+{% block content %}
     <h1>{{ poll.question }}</h1>
 
     <div class="menu"><a href="/polls/"> Back to polls list</a></div>
@@ -9,35 +11,18 @@
     <div class="results">
     {% if voted %}
         {% include "polls/poll_detail_results.html" %}
+    {% endif %}
     </div>
     <div class="poll_form">
-    {% else %}
+    {% if not voted %}
         {% include "polls/poll_detail_form.html" %}
     {% endif %}
     </div>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#vote').click(create_vote);
-    });
-
-    var create_vote = function(e) {
-        e.preventDefault()
-        var value = $("form input[name='choice']:checked").val();
-        var data = { choice: value };
-        var args = { type:"POST", url:"/polls/{{ poll.id }}/vote/", data:data, complete:create_vote_complete };
-        $.ajax(args);
-    };
-
-    var create_vote_complete = function(res, status) {
-        if (status == "success") {
-            $(".results").html(res.responseText);
-        }
-    }
-
-    $.ajaxSetup( {
-            data: { csrfmiddlewaretoken: '{{csrf_token}}' },
-        });
-</script>
+    <script type="text/javascript">
+        jQuery.data(document.body, "poll_id", "{{ poll.id }}");
+        $.ajaxSetup( {data: { csrfmiddlewaretoken: '{{csrf_token}}' }});
+    </script>
+    <script type="text/javascript" src="{% static 'polls/vote.js' %}"></script>
 
 {% endblock %}
