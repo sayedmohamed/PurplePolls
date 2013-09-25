@@ -45,10 +45,11 @@ def _get_polls_and_voted(request):
 # Detail view of a single poll
 def poll_detail(request, pk):
     poll = get_object_or_404(Poll, pk=pk)
-    if _has_user_voted(request, unicode(poll.id)):
-        return render(request, 'polls/results.html', {'poll': poll})
-    else:
-        return render(request, 'polls/detail.html', {'poll': poll})
+    voted = _has_user_voted(request, unicode(poll.id))
+    return render(request, 'polls/poll_detail.html', {
+        'poll': poll,
+        'voted': voted,
+    })
 
 
 # Save the user's vote on a poll
@@ -68,9 +69,10 @@ def vote(request, poll_id):
             selected_choice.votes += 1
             selected_choice.save()
 
-    return render(request, 'polls/results_inner.html', {
+    return render(request, 'polls/poll_detail_results.html', {
         'poll': p,
         'message': message,
+        'voted': True,
     })
 
 
