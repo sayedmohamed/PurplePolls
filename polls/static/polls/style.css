@@ -36,3 +36,14 @@ textarea {
 .message {
     font-weight: bold;
 }
+
+.popup {
+    background-color: #9E7570;
+    color: #FFFFFF;
+    border: 1px solid #5A388C;
+    border-radius: 6px;
+    width: 450px;
+    height: 45px;
+    padding: 3px;
+    margin-bottom: 10px;
+}

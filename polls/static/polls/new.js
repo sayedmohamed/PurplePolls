@@ -49,6 +49,8 @@ var new_poll_complete = function(res, status) {
     if (status === "success") {
         $(".poll_list_outer").html(res.responseText)
         $("#new").disabled=true;
+        question = $("form input[name='question']:text").val();
+        popup_poll_added("You're poll '" + question + "' was added! ")
         cleanup();
     }
     else {
@@ -61,4 +63,10 @@ cleanup = function() {
     $("#choices_list").text('');
     $("form input[name='choice']:text").val('');
     $("form input[name='question']:text").val('');
+};
+
+// Popup message to let the user know a poll was added
+popup_poll_added = function(msg) {
+    var msg_div = $('<div class="popup"><p>' + msg + '</p></div>');
+    $(".message").append(msg_div).fadeIn('slow').animate({opacity: 1.0}, 7000).fadeOut('slow',function() { msg_div.remove(); });
 };
