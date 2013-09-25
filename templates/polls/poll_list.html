@@ -7,9 +7,9 @@
             {% for poll in latest_poll_list %}
                 <li>
                     {% if poll.1 %}
-                        [Voted]
+                        [Done]
                     {% else %}
-                        [Vote!]
+                        [Todo]
                     {% endif %}
                     &nbsp;
                     <a href="{% url 'polls:detail' poll.0.id %}">{{ poll.0.question }}</a>
