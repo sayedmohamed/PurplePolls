@@ -40,7 +40,7 @@ create_poll = function (e) {
 add_choice = function(e) {
     e.preventDefault();
     var new_choice = $("form input[name='choice']:text").val();
-    $("form input[name='choice']:text").val('');
+    $("form input[name='choice']:text").val('').focus();
     $("#choices_list").append("<li>" + new_choice + "</li>");
     choices.push(new_choice);
 };
