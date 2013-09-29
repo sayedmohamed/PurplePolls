@@ -35,6 +35,8 @@ textarea {
 
 .message {
     font-weight: bold;
+    color: #5A388C;
+    margin: 10px;
 }
 
 .popup {

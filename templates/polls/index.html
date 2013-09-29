@@ -4,8 +4,8 @@
 {% block content %}
 
     <div class="inner_container">
-        <div class="message"></div>
         <strong>Create a new poll</strong>
+        <div class="message"></div>
         <form method="post">
         {% csrf_token %}
             <div>Question:</div><input type="text" name="question" />
