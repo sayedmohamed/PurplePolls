@@ -54,7 +54,6 @@ var new_poll_complete = function(res, status) {
         popup_poll_added("You're poll '" + question + "' was added! ")
     }
     else {
-        console.log('test');
         $(".message").html(res.responseText);
     }
 };
