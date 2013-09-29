@@ -27,12 +27,13 @@ create_poll = function (e) {
         add_choice(e);
     }
 
+    // Make the ajax call
     var question = $("form input[name='question']:text").val();
-    if (question != "") {
-        var data = { question: question, choices: choices.toString() };
-        var args = { type: "POST", url: "/polls/new", data: data, complete: new_poll_complete };
-        $.ajax(args);
-    }
+    var data = { question: question, choices: choices.toString() };
+    var args = { type: "POST", url: "/polls/new", data: data, complete: new_poll_complete };
+    $.ajax(args);
+
+    $('input[type="submit"]').removeAttr('disabled');
 };
 
 // Locally add a choice to a JSON array that is pushed when the user submits
@@ -48,13 +49,13 @@ add_choice = function(e) {
 var new_poll_complete = function(res, status) {
     if (status === "success") {
         $(".poll_list_outer").html(res.responseText)
-        $("#new").disabled=true;
-        question = $("form input[name='question']:text").val();
+        var question = $("form input[name='question']:text").val();
         popup_poll_added("You're poll '" + question + "' was added! ")
         cleanup();
     }
     else {
-        $(".message").html(res.responseText)
+        console.log('test');
+        $(".message").html(res.responseText);
     }
 };
 

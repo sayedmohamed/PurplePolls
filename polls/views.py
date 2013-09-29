@@ -21,6 +21,11 @@ def index_new(request):
     except KeyError:
         return HttpResponseServerError("Missing some values.")
     else:
+        if not len(question):
+            return HttpResponseServerError("Please enter a question")
+        if not len(choices):
+            return HttpResponseServerError("Please enter at least one choice")
+
         p = Poll(question=question, pub_date=timezone.now())
         p.save()
         for choice in choices:
