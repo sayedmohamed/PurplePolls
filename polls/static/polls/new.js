@@ -40,9 +40,11 @@ create_poll = function (e) {
 add_choice = function(e) {
     e.preventDefault();
     var new_choice = $("form input[name='choice']:text").val();
+    if (new_choice.length > 0) {
+        $("#choices_list").append("<li>" + new_choice + "</li>");
+        choices.push(new_choice);
+    }
     $("form input[name='choice']:text").val('').focus();
-    $("#choices_list").append("<li>" + new_choice + "</li>");
-    choices.push(new_choice);
 };
 
 // Callback from the Ajax query - display results / error msg
